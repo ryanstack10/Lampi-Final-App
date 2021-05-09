@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'constants.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 class MainScreen extends StatefulWidget {
   static String id = "/main";
@@ -19,6 +20,8 @@ class _MainScreenState extends State<MainScreen> {
   double _brightnessSliderPosition = 359.9;
 
   bool on = true;
+
+  FlutterBlue flutterBlue;
 
   final List<Color> _colors = [
     Colors.red,
@@ -82,12 +85,30 @@ class _MainScreenState extends State<MainScreen> {
   void startColor(context) async {
     await Future.delayed(Duration(milliseconds: 1), () {
       setState(() {
+        flutterBlue = FlutterBlue.instance;
+
         _hueSliderPosition = 0;
         currentColor = calculateSelectedColor(_colors, 0, 360.0);
         shadedColor = calculateSelectedColor(
             [Colors.white, currentColor], _saturationSliderPosition, 360.0);
         brightnessColor = calculateSelectedColor(
             [Colors.black, shadedColor], _brightnessSliderPosition, 360.0);
+
+        // Start scanning
+        flutterBlue.startScan(timeout: Duration(seconds: 4));
+
+        // Listen to scan results
+        var subscription = flutterBlue.scanResults.listen((results) {
+          // do something with scan results
+          for (ScanResult r in results) {
+            print('${r.device} found! rssi: ${r.rssi}');
+          }
+        });
+
+// Stop scanning
+        flutterBlue.stopScan();
+
+
       });
     });
   }
