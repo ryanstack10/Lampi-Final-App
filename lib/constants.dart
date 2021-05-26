@@ -10,7 +10,7 @@ Widget colorSlider({colors, sliderPos, maxWidth, handle, currentColor}){
     if (position < 0) {
       position = 0;
     }
-    print("New pos: $position");
+   // print("New pos: $position");
 
     handle(position);
   }
@@ -18,7 +18,7 @@ Widget colorSlider({colors, sliderPos, maxWidth, handle, currentColor}){
   return GestureDetector(
     behavior: HitTestBehavior.opaque,
     onHorizontalDragStart: (DragStartDetails details) {
-      print("_-------------------------STARTED DRAG");
+     // print("_-------------------------STARTED DRAG");
       colorChangeHandler(details.localPosition.dx);
     },
     onHorizontalDragUpdate: (DragUpdateDetails details) {
@@ -53,7 +53,7 @@ class _SliderIndicatorPainter extends CustomPainter {
   _SliderIndicatorPainter(this.position, this._color);
   @override
   void paint(Canvas canvas, Size size) {
-    print(position);
+   // print(position);
     canvas.drawCircle(
         Offset(position, size.height / 2), 20, Paint()..color = _color);
   }
